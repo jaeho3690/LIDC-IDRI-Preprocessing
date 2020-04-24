@@ -28,14 +28,20 @@ You would need to set up the pylidc library for preprocessing. There is an instr
 make sure to create the configuration file as stated in the instruction
 
 ## 3. Explanation for each python file
-1. config_file_create.py
+```bash
+python config_file_create.py
+```
 This python script contains the configuration setting for the directories. Change the directories settings to where you want to save your output files.
 This will create a configuration file 'lung.conf'
 
-1. utils.py
+```bash
+python utils.py
+```
 This python script contains function to segment the lung. Segmenting the lung and nodule are two different thing. Don't get confused. 
 
-1. prepare_dataset.py
+```bash
+python prepare_dataset.py
+```
 This python script will create the image,mask files and save them to the data folder. The script will also create a meta_info.csv containing information about whether the nodule is
 cancerous. In the Lidc Dataset, each nodule is annotated at a maximum of 4 doctors. Each doctors have annotated the malignancy of each nodule in the scale of 1 to 5. 
 I have chosed the median high label for each nodule as the final malignancy. The meta_csv data contains all the information and will be used later in the classification stage.
@@ -55,3 +61,13 @@ The Image folder contains the segmented lung .npy folders for each patient's fol
 
 1. Mask
 The Mask folder contains the mask files for the nodule.
+
+
+## 5. Contributing and Acknowledgement
+I started this Lung cancer detection project a year ago. I was really a newbie to python. I didn't even get what a directory setting is at the time! However, I had to complete this project
+for some personal reasons. I looked through google and other githubs. But most of them were too hard to understand and the code itself lacked information. I hope my codes here could help
+other researchers first starting to do lung cancer detection projects
+
+here is the link of github where I learned a lot from. Some of the codes are sourced from below.
+1. https://github.com/mikejhuang/LungNoduleDetectionClassification
+
