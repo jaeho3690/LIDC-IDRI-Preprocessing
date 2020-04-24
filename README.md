@@ -1,7 +1,8 @@
 # LIDC Preprocessing with Pylidc library
 This is the preprocessing step of the LIDC-IDRI dataset. We use pylidc library to save nodule images into an .npy file format.
 The code file structure is as below
-.
+
+```
 +-- config_file_create.py
 +-- utils.py
 +-- _data
@@ -15,7 +16,7 @@ The code file structure is as below
 |       +-- LIDC-IDRI-0001
 |       +-- '''
 +-- prepare_dataset.py
-
+```
 
 ## 1.Download LIDC-IDRI dataset
 First you would have to download the whole LIDC-IDRI [dataset](https://wiki.cancerimagingarchive.net/display/Public/LIDC-IDRI)
