@@ -6,15 +6,17 @@ The code file structure is as below
 +-- config_file_create.py
 +-- utils.py
 +-- _data
-|   +-- _Clean
+|   |-- _Clean
 |       +-- Image
 |       +-- Mask
-|   +-- Image
+|   |-- Image
 |       +-- LIDC-IDRI-0001
-|       +-- '''
-|   +-- Mask
+|       +-- LIDC-IDRI-0002
+|       +-- ...
+|   |-- Mask
 |       +-- LIDC-IDRI-0001
-|       +-- '''
+|       +-- LIDC-IDRI-0002
+|       +-- ...
 +-- prepare_dataset.py
 ```
 
@@ -52,14 +54,17 @@ This prepare_dataset.py looks for the lung.conf file. The configuration file sho
 the data folder stores all the output images,masks.
 inside the data folder there are 3 subfolders. 
 1. Clean
+
 The Clean folder contains two subfolders. Image and Mask folders.
 Some patients don't have nodules. In the actual implementation, a person will have more slices of image without a nodule. To consider this, we save lung images without nodules.
 These images will be used in the test set 
 
 1. Image
+
 The Image folder contains the segmented lung .npy folders for each patient's folder
 
 1. Mask
+
 The Mask folder contains the mask files for the nodule.
 
 
