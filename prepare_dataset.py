@@ -68,7 +68,7 @@ class MakeDataSet:
 
     def prepare_dataset(self):
         # This is to name each image and mask
-        prefix = [str(x).zfill(2) for x in range(100)]
+        prefix = [str(x).zfill(3) for x in range(1000)]
 
         # Make directory
         if not os.path.exists(self.img_path):
@@ -119,9 +119,9 @@ class MakeDataSet:
                         # I am not sure why but some values are stored as -0. <- this may result in datatype error in pytorch training # Not sure
                         lung_segmented_np_array[lung_segmented_np_array==-0] =0
                         # This itereates through the slices of a single nodule
-
-                        nodule_name = "{}_nodule{}_slice{}".format(pid[-4:],nodule_idx,prefix[nodule_slice])
-                        mask_name = "{}_mask{}_slice{}".format(pid[-4:],nodule_idx,prefix[nodule_slice])
+                        #NI= Nodule Image, MA= Mask Original
+                        nodule_name = "{}_NI{}_slice{}".format(pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
+                        mask_name = "{}_MA{}_slice{}".format(pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
                         meta_list = [pid[-4:],nodule_idx,prefix[nodule_slice],nodule_name,mask_name,malignancy,cancer_label]
 
                         self.save_meta(meta_list)
@@ -135,14 +135,15 @@ class MakeDataSet:
                 Path(patient_clean_dir_mask).mkdir(parents=True, exist_ok=True)
                 #There are patients that don't have nodule at all. Meaning, its a clean dataset. We need to use this for validation
                 for slice in range(vol.shape[2]):
-                    if slice >99:
+                    if slice >50:
                         break
                     lung_segmented_np_array = segment_lung(vol[:,:,slice])
                     lung_segmented_np_array[lung_segmented_np_array==-0] =0
                     lung_mask = np.zeros_like(lung_segmented_np_array)
-
-                    nodule_name = "{}_slice{}".format(pid[-4:],prefix[slice])
-                    mask_name = "{}_slice{}".format(pid[-4:],prefix[slice])
+                    
+                    #CN= CleanNodule, CM = CleanMask
+                    nodule_name = "{}_CN001_slice{}".format(pid[-4:],prefix[slice])
+                    mask_name = "{}_CM001_slice{}".format(pid[-4:],prefix[slice])
                     meta_list = [pid[-4:],slice,prefix[slice],nodule_name,mask_name,0,False]
                     self.save_meta(meta_list)
                     np.save(patient_clean_dir_image / nodule_name, lung_segmented_np_array)

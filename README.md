@@ -21,8 +21,8 @@ The code file structure is as below
 ```
 
 ## 1.Download LIDC-IDRI dataset
-First you would have to download the whole LIDC-IDRI [dataset](https://wiki.cancerimagingarchive.net/display/Public/LIDC-IDRI)
-When you go through the website, you will see the Data Acess section. You would need to click Search button to specify the images modality.
+First you would have to download the whole LIDC-IDRI [dataset](https://wiki.cancerimagingarchive.net/display/Public/LIDC-IDRI).
+On the website, you will see the Data Acess section. You would need to click Search button to specify the images modality.
 I clicked on CT only and downloaded total of 1010 patients.
 
 ## 2. Set up pylidc library
