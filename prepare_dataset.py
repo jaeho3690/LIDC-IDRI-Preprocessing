@@ -125,8 +125,8 @@ class MakeDataSet:
                         meta_list = [pid[-4:],nodule_idx,prefix[nodule_slice],nodule_name,mask_name,malignancy,cancer_label,False]
 
                         self.save_meta(meta_list)
-                        np.save(patient_image_dir / nodule_name,lung_segmented_np_array)
-                        np.save(patient_mask_dir / mask_name,mask[:,:,nodule_slice])                  
+                        #np.save(patient_image_dir / nodule_name,lung_segmented_np_array)
+                        #np.save(patient_mask_dir / mask_name,mask[:,:,nodule_slice])                  
             else:
                 print("Clean Dataset",pid)
                 patient_clean_dir_image = CLEAN_DIR_IMAGE / pid
@@ -146,8 +146,8 @@ class MakeDataSet:
                     mask_name = "{}/{}_CM001_slice{}".format(pid,pid[-4:],prefix[slice])
                     meta_list = [pid[-4:],slice,prefix[slice],nodule_name,mask_name,0,False,True]
                     self.save_meta(meta_list)
-                    np.save(patient_clean_dir_image / nodule_name, lung_segmented_np_array)
-                    np.save(patient_clean_dir_mask / mask_name, lung_mask)
+                    #np.save(patient_clean_dir_image / nodule_name, lung_segmented_np_array)
+                    #np.save(patient_clean_dir_mask / mask_name, lung_mask)
 
 
 

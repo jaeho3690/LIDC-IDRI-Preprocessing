@@ -36,10 +36,7 @@ python config_file_create.py
 This python script contains the configuration setting for the directories. Change the directories settings to where you want to save your output files.
 This will create a configuration file 'lung.conf'
 
-```bash
-python utils.py
-```
-This python script contains function to segment the lung. Segmenting the lung and nodule are two different thing. Don't get confused. 
+This utils.py script contains function to segment the lung. Segmenting the lung and nodule are two different thing. Segmenting the lung only leaves only the lung region, while segmenting the nodule is finding prosepctive lung nodule regions in the lung. Don't get confused. 
 
 ```bash
 python prepare_dataset.py
@@ -48,6 +45,13 @@ This python script will create the image,mask files and save them to the data fo
 cancerous. In the Lidc Dataset, each nodule is annotated at a maximum of 4 doctors. Each doctors have annotated the malignancy of each nodule in the scale of 1 to 5. 
 I have chosed the median high label for each nodule as the final malignancy. The meta_csv data contains all the information and will be used later in the classification stage.
 This prepare_dataset.py looks for the lung.conf file. The configuration file should be in the same directory.
+
+To make a train/val/test split
+A nodule may contain several slices of images. Some researches have taken each of these slices indpendent from each other. However, I believe that these image slices should not be seen as independent from one another. Thus, I have tried to maintain a same set of nodule images to be included in the same split. Although this apporach reduces the accuracy of test results, it seems to be the right approach.
+
+To make the split, run the jupyter file. This will create a clean_meta.csv, meta.csv containing information about the nodules, train/val/test split.
+
+
 
 
 ## 4. Data folder
@@ -59,11 +63,11 @@ The Clean folder contains two subfolders. Image and Mask folders.
 Some patients don't have nodules. In the actual implementation, a person will have more slices of image without a nodule. To consider this, we save lung images without nodules.
 These images will be used in the test set 
 
-1. Image
+2. Image
 
 The Image folder contains the segmented lung .npy folders for each patient's folder
 
-1. Mask
+3. Mask
 
 The Mask folder contains the mask files for the nodule.
 
