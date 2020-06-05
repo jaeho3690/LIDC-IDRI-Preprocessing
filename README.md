@@ -37,33 +37,32 @@ On the website, you will see the Data Acess section. You would need to click Sea
 I clicked on CT only and downloaded total of 1010 patients.
 
 ## 2. Set up pylidc library
-You would need to set up the pylidc library for preprocessing. There is an instruction in the [documentation](https://pylidc.github.io/install.html)
-make sure to create the configuration file as stated in the instruction. Right now I am using library version 0.2.1
+You would need to set up the pylidc library for preprocessing. There is an instruction in the [documentation](https://pylidc.github.io/install.html).
+Make sure to create the configuration file as stated in the instruction. Right now I am using library version 0.2.1
 
 ## 3. Explanation for each python file
 ```bash
 python config_file_create.py
 ```
-This python script contains the configuration setting for the directories. Change the directories settings to where you want to save your output files. Without modification, it will automatically save the preprocessed file in the data folder
+This python script contains the configuration setting for the directories. Change the directories settings to where you want to save your output files. Without modification, it will automatically save the preprocessed file in the data folder.
 Running this script will create a configuration file 'lung.conf'
 
-This utils.py script contains function to segment the lung. Segmenting the lung and nodule are two different thing. Segmenting the lung only leaves only the lung region, while segmenting the nodule is finding prosepctive lung nodule regions in the lung. Don't get confused. 
+This utils.py script contains function to segment the lung. Segmenting the lung and nodule are two different things. Segmenting the lung leaves the lung region only, while segmenting the nodule is finding prosepctive lung nodule regions in the lung. Don't get confused. 
 
 ```bash
 python prepare_dataset.py
 ```
-This python script will create the image,mask files and save them to the data folder. The script will also create a meta_info.csv containing information about whether the nodule is
-cancerous. In the Lidc Dataset, each nodule is annotated at a maximum of 4 doctors. Each doctors have annotated the malignancy of each nodule in the scale of 1 to 5. 
+This python script will create the image, mask files and save them to the data folder. The script will also create a meta_info.csv file containing information about whether the nodule is
+cancerous. In the LIDC Dataset, each nodule is annotated at a maximum of 4 doctors. Each doctors have annotated the malignancy of each nodule in the scale of 1 to 5. 
 I have chosed the median high label for each nodule as the final malignancy. The meta_csv data contains all the information and will be used later in the classification stage.
 This prepare_dataset.py looks for the lung.conf file. The configuration file should be in the same directory. Running this script will output .npy files for each slice with a size of 512*512
 
-To make a train/val/test split
-A nodule may contain several slices of images. Some researches have taken each of these slices indpendent from each other. 
-However, I believe that these image slices should not be seen as independent from one another. 
+To make a train/ val/ test split run the jupyter file in notebook folder. This will create an additional clean_meta.csv, meta.csv containing information about the nodules, train/val/test split.
+
+A nodule may contain several slices of images. Some researches have taken each of these slices indpendent from one another. 
+However, I believe that these image slices should not be seen as independent from adjacent slice image. 
 Thus, I have tried to maintain a same set of nodule images to be included in the same split. Although this apporach reduces the accuracy of test results, it seems to be the honest approach.
 
-
-To make the split, run the jupyter file in notebook folder. This will create an additional clean_meta.csv, meta.csv containing information about the nodules, train/val/test split.
 
 
 ## 4. Data folder
@@ -87,7 +86,7 @@ The Mask folder contains the mask files for the nodule.
 ## 5. Contributing and Acknowledgement
 I started this Lung cancer detection project a year ago. I was really a newbie to python. I didn't even understand what a directory setting is at the time! However, I had to complete this project
 for some personal reasons. I looked through google and other githubs. But most of them were too hard to understand and the code itself lacked information. I hope my codes here could help
-other researchers first starting to do lung cancer detection projects
+other researchers first starting to do lung cancer detection projects. Please give a star if you found this repository useful.
 
 here is the link of github where I learned a lot from. Some of the codes are sourced from below.
 1. https://github.com/mikejhuang/LungNoduleDetectionClassification
