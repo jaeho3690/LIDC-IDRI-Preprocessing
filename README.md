@@ -1,11 +1,12 @@
 # LIDC Preprocessing with Pylidc library
-This is the preprocessing step of the LIDC-IDRI dataset. We use pylidc library to save nodule images into an .npy file format.
+This repository would preprocess the LIDC-IDRI dataset. We use pylidc library to save nodule images into an .npy file format.
 The code file structure is as below
 
 ```
-+-- config_file_create.py
-+-- utils.py
-+-- _data
++-- LIDC-IDRI
+|    # This file should contain the original LIDC dataset
++-- data
+|    # This file contains the preprocessed data
 |   |-- _Clean
 |       +-- Image
 |       +-- Mask
@@ -17,9 +18,19 @@ The code file structure is as below
 |       +-- LIDC-IDRI-0001
 |       +-- LIDC-IDRI-0002
 |       +-- ...
++-- figures
+|    # Save figures here
++-- notebook
+|    # This notebook file edits the meta.csv file to make indexing easier
++-- config_file_create.py
+|    # Creates configuration file. You can edit the hyperparameters of the Pylidc library here
 +-- prepare_dataset.py
-```
+|    # Run this file to preprocess the LIDC-IDRI dicom files. Results would be saved in the data folder
++-- utils.py
+     # Utility script
 
+```
+![alt text](.figures/after_segment.png)
 ## 1.Download LIDC-IDRI dataset
 First you would have to download the whole LIDC-IDRI [dataset](https://wiki.cancerimagingarchive.net/display/Public/LIDC-IDRI).
 On the website, you will see the Data Acess section. You would need to click Search button to specify the images modality.
@@ -27,14 +38,14 @@ I clicked on CT only and downloaded total of 1010 patients.
 
 ## 2. Set up pylidc library
 You would need to set up the pylidc library for preprocessing. There is an instruction in the [documentation](https://pylidc.github.io/install.html)
-make sure to create the configuration file as stated in the instruction
+make sure to create the configuration file as stated in the instruction. Right now I am using library version 0.2.1
 
 ## 3. Explanation for each python file
 ```bash
 python config_file_create.py
 ```
-This python script contains the configuration setting for the directories. Change the directories settings to where you want to save your output files.
-This will create a configuration file 'lung.conf'
+This python script contains the configuration setting for the directories. Change the directories settings to where you want to save your output files. Without modification, it will automatically save the preprocessed file in the data folder
+Running this script will create a configuration file 'lung.conf'
 
 This utils.py script contains function to segment the lung. Segmenting the lung and nodule are two different thing. Segmenting the lung only leaves only the lung region, while segmenting the nodule is finding prosepctive lung nodule regions in the lung. Don't get confused. 
 
@@ -44,14 +55,15 @@ python prepare_dataset.py
 This python script will create the image,mask files and save them to the data folder. The script will also create a meta_info.csv containing information about whether the nodule is
 cancerous. In the Lidc Dataset, each nodule is annotated at a maximum of 4 doctors. Each doctors have annotated the malignancy of each nodule in the scale of 1 to 5. 
 I have chosed the median high label for each nodule as the final malignancy. The meta_csv data contains all the information and will be used later in the classification stage.
-This prepare_dataset.py looks for the lung.conf file. The configuration file should be in the same directory.
+This prepare_dataset.py looks for the lung.conf file. The configuration file should be in the same directory. Running this script will output .npy files for each slice with a size of 512*512
 
 To make a train/val/test split
-A nodule may contain several slices of images. Some researches have taken each of these slices indpendent from each other. However, I believe that these image slices should not be seen as independent from one another. Thus, I have tried to maintain a same set of nodule images to be included in the same split. Although this apporach reduces the accuracy of test results, it seems to be the right approach.
+A nodule may contain several slices of images. Some researches have taken each of these slices indpendent from each other. 
+However, I believe that these image slices should not be seen as independent from one another. 
+Thus, I have tried to maintain a same set of nodule images to be included in the same split. Although this apporach reduces the accuracy of test results, it seems to be the honest approach.
 
-To make the split, run the jupyter file. This will create a clean_meta.csv, meta.csv containing information about the nodules, train/val/test split.
 
-
+To make the split, run the jupyter file in notebook folder. This will create an additional clean_meta.csv, meta.csv containing information about the nodules, train/val/test split.
 
 
 ## 4. Data folder
@@ -60,8 +72,8 @@ inside the data folder there are 3 subfolders.
 1. Clean
 
 The Clean folder contains two subfolders. Image and Mask folders.
-Some patients don't have nodules. In the actual implementation, a person will have more slices of image without a nodule. To consider this, we save lung images without nodules.
-These images will be used in the test set 
+Some patients don't have nodules. In the actual implementation, a person will have more slices of image without a nodule. To evaluate our generalization on real world application, we save lung images without nodules for testing purpose.
+These images will be used in the test set.
 
 2. Image
 
@@ -73,7 +85,7 @@ The Mask folder contains the mask files for the nodule.
 
 
 ## 5. Contributing and Acknowledgement
-I started this Lung cancer detection project a year ago. I was really a newbie to python. I didn't even get what a directory setting is at the time! However, I had to complete this project
+I started this Lung cancer detection project a year ago. I was really a newbie to python. I didn't even understand what a directory setting is at the time! However, I had to complete this project
 for some personal reasons. I looked through google and other githubs. But most of them were too hard to understand and the code itself lacked information. I hope my codes here could help
 other researchers first starting to do lung cancer detection projects
 
