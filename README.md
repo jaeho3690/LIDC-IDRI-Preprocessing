@@ -30,7 +30,7 @@ The code file structure is as below
      # Utility script
 
 ```
-![Segmented Image](/figures/after_segment.png)
+![Segmented Image](/figures/output_segment.png)
 ## 1.Download LIDC-IDRI dataset
 First you would have to download the whole LIDC-IDRI [dataset](https://wiki.cancerimagingarchive.net/display/Public/LIDC-IDRI).
 On the website, you will see the Data Acess section. You would need to click Search button to specify the images modality.
