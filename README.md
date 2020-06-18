@@ -18,6 +18,8 @@ The code file structure is as below
 |       +-- LIDC-IDRI-0001
 |       +-- LIDC-IDRI-0002
 |       +-- ...
+|   |-- Meta
+|       +-- meta.csv
 +-- figures
 |    # Save figures here
 +-- notebook
