@@ -25,6 +25,7 @@ MASK_DIR = is_dir_path(parser.get('prepare_dataset','MASK_PATH'))
 IMAGE_DIR = is_dir_path(parser.get('prepare_dataset','IMAGE_PATH'))
 CLEAN_DIR_IMAGE = is_dir_path(parser.get('prepare_dataset','CLEAN_PATH_IMAGE'))
 CLEAN_DIR_MASK = is_dir_path(parser.get('prepare_dataset','CLEAN_PATH_MASK'))
+META_DIR = is_dir_path(parser.get('prepare_dataset','META_PATH'))
 
 #Hyper Parameter setting for prepare dataset function
 mask_threshold = parser.getint('prepare_dataset','Mask_Threshold')
@@ -34,18 +35,19 @@ confidence_level = parser.getfloat('pylidc','confidence_level')
 padding = parser.getint('pylidc','padding_size')
 
 class MakeDataSet:
-    def __init__(self, LIDC_Patients_list, IMAGE_DIR, MASK_DIR,CLEAN_DIR_IMAGE,CLEAN_DIR_MASK, mask_threshold, padding, confidence_level=0.5):
-        self.IDRI_list = LIDC_Patients_list 
+    def __init__(self, LIDC_Patients_list, IMAGE_DIR, MASK_DIR,CLEAN_DIR_IMAGE,CLEAN_DIR_MASK,META_DIR, mask_threshold, padding, confidence_level=0.5):
+        self.IDRI_list = LIDC_Patients_list
         self.img_path = IMAGE_DIR
         self.mask_path = MASK_DIR
         self.clean_path_img = CLEAN_DIR_IMAGE
         self.clean_path_mask = CLEAN_DIR_MASK
+        self.meta_path = META_DIR
         self.mask_threshold = mask_threshold
         self.c_level = confidence_level
         self.padding = [(padding,padding),(padding,padding),(0,0)]
         self.meta = pd.DataFrame(index=[],columns=['patient_id','nodule_no','slice_no','original_image','mask_image','malignancy','is_cancer','is_clean'])
-        
-        
+
+
     def calculate_malignancy(self,nodule):
         # Calculate the malignancy of a nodule by annotations made by doctor. Return median high of the annotated cancer, True or False label for cancer
         # if median high is above 3, we return a label True for cancer
@@ -54,7 +56,7 @@ class MakeDataSet:
         list_of_malignancy =[]
         for annotation in nodule:
             list_of_malignancy.append(annotation.malignancy)
-        
+
         malignancy = median_high(list_of_malignancy)
         if  malignancy > 3:
             return malignancy,True
@@ -79,12 +81,15 @@ class MakeDataSet:
             os.makedirs(self.clean_path_img)
         if not os.path.exists(self.clean_path_mask):
             os.makedirs(self.clean_path_mask)
-        
+        if not os.path.exists(self.meta_path):
+            os.makedirs(self.meta_path)
+
         IMAGE_DIR = Path(self.img_path)
         MASK_DIR = Path(self.mask_path)
         CLEAN_DIR_IMAGE = Path(self.clean_path_img)
         CLEAN_DIR_MASK = Path(self.clean_path_mask)
-    
+
+
 
         for patient in tqdm(self.IDRI_list):
             pid = patient #LIDC-IDRI-0001~
@@ -109,7 +114,7 @@ class MakeDataSet:
 
                     # We calculate the malignancy information
                     malignancy, cancer_label = self.calculate_malignancy(nodule)
-                        
+
                     for nodule_slice in range(mask.shape[2]):
                         # There are some mask sizes that are too small. These may hinder training.
                         if np.sum(mask[:,:,nodule_slice]) <= self.mask_threshold:
@@ -126,7 +131,7 @@ class MakeDataSet:
 
                         self.save_meta(meta_list)
                         np.save(patient_image_dir / nodule_name,lung_segmented_np_array)
-                        np.save(patient_mask_dir / mask_name,mask[:,:,nodule_slice])                  
+                        np.save(patient_mask_dir / mask_name,mask[:,:,nodule_slice])
             else:
                 print("Clean Dataset",pid)
                 patient_clean_dir_image = CLEAN_DIR_IMAGE / pid
@@ -140,7 +145,7 @@ class MakeDataSet:
                     lung_segmented_np_array = segment_lung(vol[:,:,slice])
                     lung_segmented_np_array[lung_segmented_np_array==-0] =0
                     lung_mask = np.zeros_like(lung_segmented_np_array)
-                    
+
                     #CN= CleanNodule, CM = CleanMask
                     nodule_name = "{}/{}_CN001_slice{}".format(pid,pid[-4:],prefix[slice])
                     mask_name = "{}/{}_CM001_slice{}".format(pid,pid[-4:],prefix[slice])
@@ -152,7 +157,7 @@ class MakeDataSet:
 
 
         print("Saved Meta data")
-        self.meta.to_csv('./data/meta_info.csv',index=False)
+        self.meta.to_csv(self.meta_path+'meta_info.csv',index=False)
 
 
 
@@ -160,6 +165,5 @@ if __name__ == '__main__':
     LIDC_IDRI_list=os.listdir(DICOM_DIR)
     LIDC_IDRI_list.sort()
 
-    test= MakeDataSet(LIDC_IDRI_list,IMAGE_DIR,MASK_DIR,CLEAN_DIR_IMAGE,CLEAN_DIR_MASK,mask_threshold,padding,confidence_level)
+    test= MakeDataSet(LIDC_IDRI_list,IMAGE_DIR,MASK_DIR,CLEAN_DIR_IMAGE,CLEAN_DIR_MASK,META_DIR,mask_threshold,padding,confidence_level)
     test.prepare_dataset()
-
