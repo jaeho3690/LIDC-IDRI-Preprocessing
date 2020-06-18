@@ -84,6 +84,10 @@ The Image folder contains the segmented lung .npy folders for each patient's fol
 
 The Mask folder contains the mask files for the nodule.
 
+4. Meta
+
+The Meta folder contains the meta.csv file. The csv file contains information of each slice of image: Malignancy, whether the image should be used in train/val/test for the whole process, etc.
+
 
 ## 5. Contributing and Acknowledgement
 I started this Lung cancer detection project a year ago. I was really a newbie to python. I didn't even understand what a directory setting is at the time! However, I had to complete this project
