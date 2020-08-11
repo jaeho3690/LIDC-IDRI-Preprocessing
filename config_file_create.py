@@ -16,7 +16,7 @@ config['prepare_dataset'] = {
     # Directory for images
     'IMAGE_PATH':'./data/Image',
     # To save images and mask that doesn't contain any nodule or cancer
-    # These images will be used later to evaluate
+    # These images will be used later to evaluate our model
     'CLEAN_PATH_IMAGE':'./data/Clean/Image',
     'CLEAN_PATH_MASK':'./data/Clean/Mask',
     # CSV file containing nodule information, malignancy, train test split
@@ -26,11 +26,15 @@ config['prepare_dataset'] = {
     'Mask_Threshold':8
 }
 
+
+# This is the configuration file for pylidc library
 config['pylidc'] = {
+    # Confidence level determines the overlap between the 4 doctors who have made annotation
     'confidence_level': 0.5,
+    # 512 determines the size of the image
     'padding_size': 512
 }
 
-
+# Create the configuration file in lung.conf
 with open('./lung.conf', 'w') as f:
       config.write(f)

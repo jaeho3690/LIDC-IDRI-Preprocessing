@@ -16,6 +16,7 @@ from PIL import Image
 
 warnings.filterwarnings(action='ignore')
 
+# Read the configuration file generated from config_file_create.py
 parser = ConfigParser()
 parser.read('lung.conf')
 
@@ -49,7 +50,7 @@ class MakeDataSet:
 
 
     def calculate_malignancy(self,nodule):
-        # Calculate the malignancy of a nodule by annotations made by doctor. Return median high of the annotated cancer, True or False label for cancer
+        # Calculate the malignancy of a nodule with the annotations made by 4 doctors. Return median high of the annotated cancer, True or False label for cancer
         # if median high is above 3, we return a label True for cancer
         # if it is below 3, we return a label False for non-cancer
         # if it is 3, we return ambiguous
@@ -65,6 +66,7 @@ class MakeDataSet:
         else:
             return malignancy, 'Ambiguous'
     def save_meta(self,meta_list):
+        """Saves the information of nodule to csv file"""
         tmp = pd.Series(meta_list,index=['patient_id','nodule_no','slice_no','original_image','mask_image','malignancy','is_cancer','is_clean'])
         self.meta = self.meta.append(tmp,ignore_index=True)
 
@@ -108,7 +110,7 @@ class MakeDataSet:
                 # Patients with nodules
                 for nodule_idx, nodule in enumerate(nodules_annotation):
                 # Call nodule images. Each Patient will have at maximum 4 annotations as there are only 4 doctors
-                # This current for loop iterates for number of nodules in a single patient
+                # This current for loop iterates over total number of nodules in a single patient
                     mask, cbbox, masks = consensus(nodule,self.c_level,self.padding)
                     lung_np_array = vol[cbbox]
 
@@ -116,6 +118,7 @@ class MakeDataSet:
                     malignancy, cancer_label = self.calculate_malignancy(nodule)
 
                     for nodule_slice in range(mask.shape[2]):
+                        # This second for loop iterates over each single nodule. 
                         # There are some mask sizes that are too small. These may hinder training.
                         if np.sum(mask[:,:,nodule_slice]) <= self.mask_threshold:
                             continue
@@ -124,7 +127,7 @@ class MakeDataSet:
                         # I am not sure why but some values are stored as -0. <- this may result in datatype error in pytorch training # Not sure
                         lung_segmented_np_array[lung_segmented_np_array==-0] =0
                         # This itereates through the slices of a single nodule
-                        #NI= Nodule Image, MA= Mask Original
+                        # Naming of each file: NI= Nodule Image, MA= Mask Original
                         nodule_name = "{}/{}_NI{}_slice{}".format(pid,pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
                         mask_name = "{}/{}_MA{}_slice{}".format(pid,pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
                         meta_list = [pid[-4:],nodule_idx,prefix[nodule_slice],nodule_name,mask_name,malignancy,cancer_label,False]
