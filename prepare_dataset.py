@@ -100,9 +100,8 @@ class MakeDataSet:
             vol = scan.to_volume()
             print("Patient ID: {} Dicom Shape: {} Number of Annotated Nodules: {}".format(pid,vol.shape,len(nodules_annotation)))
 
-            patient_image_dir = IMAGE_DIR
-            patient_mask_dir = MASK_DIR
-
+            patient_image_dir = IMAGE_DIR / pid
+            patient_mask_dir = MASK_DIR / pid
             Path(patient_image_dir).mkdir(parents=True, exist_ok=True)
             Path(patient_mask_dir).mkdir(parents=True, exist_ok=True)
 
@@ -128,8 +127,8 @@ class MakeDataSet:
                         lung_segmented_np_array[lung_segmented_np_array==-0] =0
                         # This itereates through the slices of a single nodule
                         # Naming of each file: NI= Nodule Image, MA= Mask Original
-                        nodule_name = "{}/{}_NI{}_slice{}".format(pid,pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
-                        mask_name = "{}/{}_MA{}_slice{}".format(pid,pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
+                        nodule_name = "{}_NI{}_slice{}".format(pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
+                        mask_name = "{}_MA{}_slice{}".format(pid[-4:],prefix[nodule_idx],prefix[nodule_slice])
                         meta_list = [pid[-4:],nodule_idx,prefix[nodule_slice],nodule_name,mask_name,malignancy,cancer_label,False]
 
                         self.save_meta(meta_list)
