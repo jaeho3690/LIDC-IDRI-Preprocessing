@@ -100,8 +100,8 @@ class MakeDataSet:
             vol = scan.to_volume()
             print("Patient ID: {} Dicom Shape: {} Number of Annotated Nodules: {}".format(pid,vol.shape,len(nodules_annotation)))
 
-            patient_image_dir = IMAGE_DIR / pid
-            patient_mask_dir = MASK_DIR / pid
+            patient_image_dir = IMAGE_DIR
+            patient_mask_dir = MASK_DIR
 
             Path(patient_image_dir).mkdir(parents=True, exist_ok=True)
             Path(patient_mask_dir).mkdir(parents=True, exist_ok=True)
@@ -118,7 +118,7 @@ class MakeDataSet:
                     malignancy, cancer_label = self.calculate_malignancy(nodule)
 
                     for nodule_slice in range(mask.shape[2]):
-                        # This second for loop iterates over each single nodule. 
+                        # This second for loop iterates over each single nodule.
                         # There are some mask sizes that are too small. These may hinder training.
                         if np.sum(mask[:,:,nodule_slice]) <= self.mask_threshold:
                             continue
@@ -167,6 +167,7 @@ class MakeDataSet:
 if __name__ == '__main__':
     LIDC_IDRI_list=os.listdir(DICOM_DIR)
     LIDC_IDRI_list.sort()
+
 
     test= MakeDataSet(LIDC_IDRI_list,IMAGE_DIR,MASK_DIR,CLEAN_DIR_IMAGE,CLEAN_DIR_MASK,META_DIR,mask_threshold,padding,confidence_level)
     test.prepare_dataset()
