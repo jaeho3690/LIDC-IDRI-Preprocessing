@@ -165,7 +165,8 @@ class MakeDataSet:
 
 
 if __name__ == '__main__':
-    LIDC_IDRI_list=os.listdir(DICOM_DIR)
+    # I found out that simply using os.listdir() includes the gitignore file 
+    LIDC_IDRI_list= [f for f in os.listdir(DICOM_DIR) if not f.startswith('.')]
     LIDC_IDRI_list.sort()
 
 

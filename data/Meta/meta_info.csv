@@ -1,0 +1,1 @@
+patient_id,nodule_no,slice_no,original_image,mask_image,malignancy,is_cancer,is_clean
