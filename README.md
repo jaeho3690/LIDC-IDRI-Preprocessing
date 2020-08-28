@@ -73,21 +73,21 @@ Thus, I have tried to maintain a same set of nodule images to be included in the
 the data folder stores all the output images,masks.
 inside the data folder there are 3 subfolders. 
 
-# 1. Clean
+### 1. Clean
 
 The Clean folder contains two subfolders. Image and Mask folders.
 Some patients don't have nodules. In the actual implementation, a person will have more slices of image without a nodule. To evaluate our generalization on real world application, we save lung images without nodules for testing purpose.
 These images will be used in the test set.
 
-# 2. Image
+### 2. Image
 
 The Image folder contains the segmented lung .npy folders for each patient's folder
 
-# 3. Mask
+### 3. Mask
 
 The Mask folder contains the mask files for the nodule.
 
-# 4. Meta
+### 4. Meta
 
 The Meta folder contains the meta.csv file. The csv file contains information of each slice of image: Malignancy, whether the image should be used in train/val/test for the whole process, etc.
 
